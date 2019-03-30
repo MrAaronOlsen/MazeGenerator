@@ -1,5 +1,5 @@
 {
-  "name": "Default Setup",
+  "name": "MazGenerator",
   "version": "1.0.0",
   "description": "A Default Canvas Setup Skeleton",
   "main": "index.js",
