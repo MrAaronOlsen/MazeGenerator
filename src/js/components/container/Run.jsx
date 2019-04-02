@@ -2,17 +2,20 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 import Canvas from "../presentational/Canvas.jsx";
+import BinaryTreeMaze from "../lib/BinaryTreeMaze.js";
 
 import './run.scss'
 
-const canvasWidth = "600";
-const canvasHeight = "600";
+const mazeSize = 23
+const canvasWidth = "598";
+const canvasHeight = "598";
 
 class Run extends Component {
   constructor(props) {
     super(props);
 
     this.canvasRef = React.createRef();
+    this.binaryTreeMaze = new BinaryTreeMaze(mazeSize, mazeSize, canvasWidth / mazeSize);
   }
 
   componentDidMount() {
@@ -20,18 +23,15 @@ class Run extends Component {
     this.ctx = canvas.getContext("2d");
 
     this.drawStatic(this.ctx);
-    this.loop();
+    // this.loop();
   }
 
   drawStatic(ctx) {
-    ctx.beginPath();
-    ctx.font = '48px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("Ready to Rock!", canvasWidth/2, canvasHeight/2);
-    ctx.closePath();
+    this.binaryTreeMaze.draw(ctx)
   }
 
   draw(ctx) {
+
   }
 
   update() {
