@@ -2,20 +2,33 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 import Canvas from "../presentational/Canvas.jsx";
-import BinaryTreeMaze from "../lib/BinaryTreeMaze.js";
+import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
 
 import './run.scss'
-
-const mazeSize = 23
-const canvasWidth = "598";
-const canvasHeight = "598";
 
 class Run extends Component {
   constructor(props) {
     super(props);
 
+    this.state = this.getAdjustedMazeSize(27)
+
     this.canvasRef = React.createRef();
-    this.binaryTreeMaze = new BinaryTreeMaze(mazeSize, mazeSize, canvasWidth / mazeSize);
+    this.binaryTreeMaze = new BinaryTreeMaze(this.state.size, this.state.size, this.state.width / this.state.size);
+  }
+
+  getAdjustedMazeSize(size) {
+    if (size % 2 == 0 || size < 5) {
+      throw "Map size must be an odd number and greater than 5"
+    }
+
+    var width = 600 - (600 % size);
+    var height = 600 - (600 % size);
+
+    return {
+      size: size,
+      width: width,
+      height: height
+    }
   }
 
   componentDidMount() {
@@ -50,7 +63,7 @@ class Run extends Component {
   render() {
     return (
       <div id='main-window'>
-        <Canvas name="canvas" width={canvasWidth} height={canvasHeight} ref={this.canvasRef}/>
+        <Canvas name="canvas" width={this.state.width} height={this.state.height} ref={this.canvasRef}/>
       </div>
     );
   }

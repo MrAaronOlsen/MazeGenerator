@@ -20,8 +20,8 @@ class Canvas extends Component {
 
 Canvas.propTypes = {
   canvasRef: PropTypes.object.isRequired,
-  width: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 export default React.forwardRef((props, ref) => <Canvas canvasRef={ref} {...props}/>);

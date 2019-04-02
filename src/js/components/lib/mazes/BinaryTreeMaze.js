@@ -1,7 +1,8 @@
-import Layout from './Layout.js'
-import Wall from './Wall.js';
-import Floor from './Floor.js';
-import Door from './Door.js';
+import Layout from '../core/Layout.js'
+
+import Wall from '../cells/Wall.js';
+import Floor from '../cells/Floor.js';
+import Door from '../cells/Door.js';
 
 class BinaryTreeMaze {
   constructor(width, height, size) {
