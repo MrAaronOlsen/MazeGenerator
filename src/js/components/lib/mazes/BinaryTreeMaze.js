@@ -1,87 +1,91 @@
 import Layout from '../core/Layout.js'
 
-import Wall from '../cells/Wall.js';
-import Floor from '../cells/Floor.js';
-import Door from '../cells/Door.js';
+import Cell from '../cells/Cell.js'
 
 class BinaryTreeMaze {
-  constructor(width, height, size) {
-    this.layout = new Layout();
-
+  constructor(width, height, size, timeout) {
     this.size = size;
     this.width = width;
     this.height = height;
 
-    this.timeout = 25;
     this.steps = [];
 
+    this.timeout = timeout;
+    this.timeoutIds = [];
+
     this.choices = [
-      function(row, index, type = this.floor) { this.layout.addCol(row - 1, index, type.call()) },
-      function(row, index, type = this.floor) { this.layout.addCol(row, index - 1, type.call()) }
+      function(row, index, type = Cell.floor) { return new Cell(row - 1, index, type.call()) },
+      function(row, index, type = Cell.floor) { return new Cell(row, index - 1, type.call()) }
     ];
+
+    this.getRandom = () => { return Math.floor(Math.random() * 2) }
 
     this.build();
   }
 
-  wall() {
-    return new Wall();
-  }
-
-  floor() {
-    return new Floor();
-  }
-
-  door() {
-    return new Door();
-  }
-
-  build(ctx) {
-
+  build() {
     for (let row = 0; row < this.height; row++) {
-      this.layout.addRow(row);
-
-      this.setRow(ctx, row);
+      this.setRow(row);
     }
   }
 
-  setRow(ctx, row) {
+  setRow(row) {
     for (let col = 0; col < this.width; col++) {
-      this.setCol(ctx, row, col);
+      this.setCol(row, col);
     }
   }
 
-  setCol(ctx, row, col) {
+  setCol(row, col) {
+    var cells = [];
+
     if (row % 2 == 0 || col % 2 == 0) {
-      this.layout.addCol(row, col, new Wall());
+      let wall = new Cell(row, col, Cell.wall());
+      cells.push(wall);
 
       if (row == this.height - 1 && col == this.width - 1) {
-        this.choices[Math.floor(Math.random() * 2)].call(this, row, col, this.door)
+        let door = this.choices[this.getRandom()].call(this, row, col, Cell.door)
+        cells.push(door)
       }
     } else {
-      this.layout.addCol(row, col, new Floor());
+      let cell1 = new Cell(row, col, Cell.floor());
+      let cell2;
 
       if (row == 1 && col == 1) {
-        this.choices[Math.floor(Math.random() * 2)].call(this, row, col, this.door)
+        cell2 = this.choices[this.getRandom()].call(this, row, col, Cell.door)
       } else if (row == 1) {
-        this.choices[1].call(this, row, col);
+        cell2 = this.choices[1].call(this, row, col);
       } else if (col == 1) {
-        this.choices[0].call(this, row, col);
+        cell2 = this.choices[0].call(this, row, col);
       } else {
-        this.choices[Math.floor(Math.random() * 2)].call(this, row, col)
+        cell2 = this.choices[this.getRandom()].call(this, row, col)
       }
+
+      cells.push(cell1)
+      cells.push(cell2)
     }
 
-    this.steps.push(this.layout.clone());
+    this.steps.push(cells);
+  }
+
+  stop() {
+    this.timeoutIds.forEach(timeoutId => {
+      window.clearTimeout(timeoutId);
+    })
+
+    this.steps = [];
   }
 
   draw(ctx) {
     var size = this.size;
 
-    this.steps.forEach((layout, index) => {
-      setTimeout(() => {
-        ctx.clearRect(0, 0, this.width * size, this.height * size)
-        layout.draw(ctx, size)
+    this.steps.forEach((cells, index) => {
+      let timeoutId = setTimeout(() => {
+        cells.forEach((cell => {
+          cell.draw(ctx, size)
+        }))
       }, this.timeout * index)
+
+      this.timeoutIds.push(timeoutId);
     }, this)
   }
 }

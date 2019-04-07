@@ -1,28 +1,13 @@
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-html, main, body, #root {
-  margin: 0;
-
-  height: 100%;
-  width: 100%;
-}
-
-#root {
+#canvas-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-#main-window {
-  box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.35);
+  padding: 40px;
+
+  border-left: 1px solid black;
 }
 
 .canvas {
-  display: block;
+  box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.35);
 }

@@ -1,1 +1,1 @@
-import Run from "./js/components/container/Run.jsx";
+import Main from "./js/components/container/Main.jsx";

@@ -6,45 +6,60 @@ import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
 
 import './run.scss'
 
-class Run extends Component {
+export default class Run extends Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getAdjustedMazeSize(27)
-
     this.canvasRef = React.createRef();
-    this.binaryTreeMaze = new BinaryTreeMaze(this.state.size, this.state.size, this.state.width / this.state.size);
-  }
+    this.state = this.getCalculatedState(this.props.initialSize, this.props.initialTimeout)
 
-  getAdjustedMazeSize(size) {
-    if (size % 2 == 0 || size < 5) {
-      throw "Map size must be an odd number and greater than 5"
-    }
-
-    var width = 600 - (600 % size);
-    var height = 600 - (600 % size);
-
-    return {
-      size: size,
-      width: width,
-      height: height
-    }
+    this.props.handleState("buildMaze", this.build.bind(this))
   }
 
   componentDidMount() {
     const canvas = this.canvasRef.current;
     this.ctx = canvas.getContext("2d");
 
-    this.drawStatic(this.ctx);
-    // this.loop();
+    this.build(this.state.size, this.state.timeout)
   }
 
-  drawStatic(ctx) {
-    this.binaryTreeMaze.draw(ctx)
+  getCalculatedState(size, timeout) {
+    if (size % 2 == 0 || size < 5) {
+      throw "Map size must be an odd number and greater than 5"
+    }
+
+    var width = 600 - (600 % size);
+    var height = 600 - (600 % size);
+    var cellWidth = width / size
+
+    return {
+      size: size,
+      width: width,
+      height: height,
+      cellWidth: cellWidth,
+      timeout: timeout
+    }
+  }
+
+  getNewMaze(size, cellWidth, timeout) {
+    return new BinaryTreeMaze(size, size, cellWidth, timeout)
+  }
+
+  build(size, timeout) {
+    if (!!this.maze) {
+      this.maze.stop();
+    }
+
+    var preState = this.getCalculatedState(size, timeout);
+
+    this.maze = this.getNewMaze(preState.size, preState.cellWidth, preState.timeout);
+    this.setState(preState);
+
+    this.ctx.clearRect(0, 0, this.state.width, this.state.height);
+    this.maze.draw(this.ctx)
   }
 
   draw(ctx) {
-
   }
 
   update() {
@@ -62,12 +77,9 @@ class Run extends Component {
 
   render() {
     return (
-      <div id='main-window'>
+      <div id='canvas-wrapper'>
         <Canvas name="canvas" width={this.state.width} height={this.state.height} ref={this.canvasRef}/>
       </div>
     );
   }
 }
-
-const wrapper = document.getElementById("root");
-wrapper ? ReactDOM.render(<Run />, wrapper) : false;
