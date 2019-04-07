@@ -11,9 +11,9 @@ export default class Run extends Component {
     super(props);
 
     this.canvasRef = React.createRef();
-    this.state = this.getCalculatedState(this.props.initialSize, this.props.initialTimeout)
+    this.state = this.getCalculatedState(this.props.initialSize, this.props.initialTimeout);
 
-    this.props.handleState("buildMaze", this.build.bind(this))
+    this.props.handleState("buildMaze", this.build.bind(this));
   }
 
   componentDidMount() {
@@ -24,13 +24,13 @@ export default class Run extends Component {
   }
 
   getCalculatedState(size, timeout) {
-    if (size % 2 == 0 || size < 5) {
+    if (size % 2 == 0 || size < 5 || size > 501) {
       throw "Map size must be an odd number and greater than 5"
     }
 
     var width = 600 - (600 % size);
     var height = 600 - (600 % size);
-    var cellWidth = width / size
+    var cellWidth = width / size;
 
     return {
       size: size,
@@ -41,22 +41,21 @@ export default class Run extends Component {
     }
   }
 
-  getNewMaze(size, cellWidth, timeout) {
-    return new BinaryTreeMaze(size, size, cellWidth, timeout)
+  setMaze(mazeSize, cellWidth, timeout) {
+    this.maze = new BinaryTreeMaze(mazeSize, mazeSize, cellWidth, timeout);
   }
 
   build(size, timeout) {
-    if (!!this.maze) {
-      this.maze.stop();
-    }
+    if (!!this.maze) { this.maze.stop() }
 
-    var preState = this.getCalculatedState(size, timeout);
+    var state = this.getCalculatedState(size, timeout);
 
-    this.maze = this.getNewMaze(preState.size, preState.cellWidth, preState.timeout);
-    this.setState(preState);
+    this.setMaze(state.size, state.cellWidth, state.timeout);
+    this.setState(state);
 
     this.ctx.clearRect(0, 0, this.state.width, this.state.height);
-    this.maze.draw(this.ctx)
+    this.maze.build()
+    this.maze.draw(this.ctx);
   }
 
   draw(ctx) {

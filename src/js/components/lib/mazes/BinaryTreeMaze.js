@@ -3,70 +3,73 @@ import Layout from '../core/Layout.js'
 import Cell from '../cells/Cell.js'
 
 class BinaryTreeMaze {
-  constructor(width, height, size, timeout) {
-    this.size = size;
-    this.width = width;
-    this.height = height;
+  constructor(width, height, cellSize, timeout) {
+    this.mazeWidth = width;
+    this.mazeHeight = height;
+
+    this.cellSize = cellSize;
+    this.timeout = timeout;
 
     this.steps = [];
-
-    this.timeout = timeout;
     this.timeoutIds = [];
 
     this.choices = [
-      function(row, index, type = Cell.floor) { return new Cell(row - 1, index, type.call()) },
-      function(row, index, type = Cell.floor) { return new Cell(row, index - 1, type.call()) }
+      function(col, row, type) { return new Cell(col, row - 1, type.call()) },
+      function(col, row, type) { return new Cell(col - 1, row, type.call()) }
     ];
 
     this.getRandom = () => { return Math.floor(Math.random() * 2) }
-
-    this.build();
   }
 
   build() {
-    for (let row = 0; row < this.height; row++) {
-      this.setRow(row);
+    for (let row = 0; row < this.mazeHeight; row++) {
+      for (let col = 0; col < this.mazeWidth; col++) {
+        this.buildCells(row, col);
+      }
     }
   }
 
-  setRow(row) {
-    for (let col = 0; col < this.width; col++) {
-      this.setCol(row, col);
-    }
-  }
-
-  setCol(row, col) {
+  buildCells(row, col) {
     var cells = [];
 
+    // This algorithim treats walls as cells, rather than lines between cells
+    // Because of this we set every other row and col as a wall
     if (row % 2 == 0 || col % 2 == 0) {
-      let wall = new Cell(row, col, Cell.wall());
-      cells.push(wall);
+      cells.push(new Cell(col, row, Cell.wall()));
 
-      if (row == this.height - 1 && col == this.width - 1) {
-        let door = this.choices[this.getRandom()].call(this, row, col, Cell.door)
-        cells.push(door)
+      // Set the door if this is the last cell being set
+      if (row == this.mazeHeight - 1 && col == this.mazeWidth - 1) {
+        cells.push(this.getRandomChoice(col, row, Cell.door))
       }
     } else {
-      let cell1 = new Cell(row, col, Cell.floor());
-      let cell2;
+      // Always make current cell a floor.
+      cells.push(new Cell(col, row, Cell.floor()));
 
+      // Then cut back through the wall.
       if (row == 1 && col == 1) {
-        cell2 = this.choices[this.getRandom()].call(this, row, col, Cell.door)
+        // Place a door if this is the first floor cell
+        cells.push(this.getRandomChoice(col, row, Cell.door));
       } else if (row == 1) {
-        cell2 = this.choices[1].call(this, row, col);
+        // If we're against the top row always cut back
+        cells.push(this.choices[1].call(this, col, row, Cell.floor));
       } else if (col == 1) {
-        cell2 = this.choices[0].call(this, row, col);
+        // If we're against the left col always cut up
+        cells.push(this.choices[0].call(this, col, row, Cell.floor));
       } else {
-        cell2 = this.choices[this.getRandom()].call(this, row, col)
+        // Otherwise can randomly choose to cut up or back
+        cells.push(this.getRandomChoice(col, row, Cell.floor));
       }
-
-      cells.push(cell1)
-      cells.push(cell2)
     }
 
+    // Adds the new cells to the draw steps
     this.steps.push(cells);
   }
 
+  getRandomChoice(col, row, type) {
+    return this.choices[this.getRandom()].call(this, col, row, type)
+  }
+
+  // Clears all currenly uncalled timeouts
   stop() {
     this.timeoutIds.forEach(timeoutId => {
       window.clearTimeout(timeoutId);
@@ -76,15 +79,16 @@ class BinaryTreeMaze {
   }
 
   draw(ctx) {
-    var size = this.size;
+    var cellSize = this.cellSize;
 
     this.steps.forEach((cells, index) => {
       let timeoutId = setTimeout(() => {
         cells.forEach((cell => {
-          cell.draw(ctx, size)
+          cell.draw(ctx, cellSize)
         }))
       }, this.timeout * index)
 
+      // Store the timeout id in case we want to stop the maze before it's done drawing
       this.timeoutIds.push(timeoutId);
     }, this)
   }

@@ -3,7 +3,7 @@ import Floor from '../cells/Floor.js';
 import Door from '../cells/Door.js';
 
 class Cell {
-  constructor(y, x, type) {
+  constructor(x, y, type) {
     this.x = x;
     this.y = y;
     this.type = type;
