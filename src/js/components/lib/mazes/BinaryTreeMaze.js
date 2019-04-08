@@ -1,5 +1,3 @@
-import Layout from '../core/Layout.js'
-
 import Cell from '../cells/Cell.js'
 
 class BinaryTreeMaze {
