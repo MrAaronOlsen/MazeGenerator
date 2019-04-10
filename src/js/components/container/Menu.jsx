@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Input from "../presentational/Input.jsx";
+import Button from "../presentational/Button.jsx";
 
 import './menu.scss'
 
@@ -9,16 +11,16 @@ export default class Menu extends Component {
       <div className="menu">
         <div className="menu-row">
           <span className="menu-title">Size</span>
-          <input type="text" data-key="mazeSize" value={this.props.mazeSize} onChange={this.props.handleInput} />
+          <Input class="input" dataKey="mazeSize" value={this.props.mazeSize} handleInput={this.props.handleInput} />
         </div>
 
         <div className="menu-row">
           <span className="menu-title">Timeout</span>
-          <input type="text" data-key="timeout" value={this.props.timeout} onChange={this.props.handleInput} />
+          <Input class="input" dataKey="timeout" value={this.props.timeout} handleInput={this.props.handleInput} />
         </div>
 
         <div className="menu-row">
-          <button className="menu-button" data-key="buildMaze" onClick={this.props.handleCall}>Build</button>
+          <Button class="menu-button" dataKey="buildMaze" handleClick={this.props.handleCall} displayText="Build" />
         </div>
       </div>
     )
