@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 import Canvas from "../presentational/Canvas.jsx";
 import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
+import SideWinderMaze from "../lib/mazes/SideWinderMaze.js";
 
 import './run.scss'
 
@@ -16,11 +17,22 @@ export default class Run extends Component {
     this.props.handleState("buildMaze", this.build.bind(this));
   }
 
+  getMaze(maze) {
+    switch (maze) {
+      case "Tree":
+        return new BinaryTreeMaze();
+      case "Sidewinder":
+        return new SideWinderMaze();
+      default:
+        return new BinaryTreeMaze();
+    }
+  }
+
   componentDidMount() {
     const canvas = this.canvasRef.current;
     this.ctx = canvas.getContext("2d");
 
-    this.build(this.state.size, this.state.timeout)
+    this.build("Tree", this.state.size, this.state.timeout)
   }
 
   getCalculatedState(size, timeout) {
@@ -41,16 +53,14 @@ export default class Run extends Component {
     }
   }
 
-  setMaze(mazeSize, cellWidth, timeout) {
-    this.maze = new BinaryTreeMaze(mazeSize, mazeSize, cellWidth, timeout);
-  }
-
-  build(size, timeout) {
+  build(maze, size, timeout) {
     if (!!this.maze) { this.maze.stop() }
 
     var state = this.getCalculatedState(size, timeout);
 
-    this.setMaze(state.size, state.cellWidth, state.timeout);
+    this.maze = this.getMaze(maze);
+    this.maze.set(state.size, state.size, state.cellWidth, state.timeout);
+
     this.setState(state);
 
     this.ctx.clearRect(0, 0, this.state.width, this.state.height);

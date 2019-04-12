@@ -1,6 +1,6 @@
 import Cell from '../cells/Cell.js'
 
-class BinaryTreeMaze {
+class SideWinderMaze {
   constructor() {
     this.steps = [];
     this.timeoutIds = [];
@@ -78,19 +78,23 @@ class BinaryTreeMaze {
   }
 
   draw(ctx) {
-    var cellSize = this.cellSize;
+    // var cellSize = this.cellSize;
+    //
+    // this.steps.forEach((cells, index) => {
+    //   let timeoutId = setTimeout(() => {
+    //     cells.forEach((cell => {
+    //       cell.draw(ctx, cellSize)
+    //     }))
+    //   }, this.timeout * index)
+    //
+    //   // Store the timeout id in case we want to stop the maze before it's done drawing
+    //   this.timeoutIds.push(timeoutId);
+    // }, this)
 
-    this.steps.forEach((cells, index) => {
-      let timeoutId = setTimeout(() => {
-        cells.forEach((cell => {
-          cell.draw(ctx, cellSize)
-        }))
-      }, this.timeout * index)
-
-      // Store the timeout id in case we want to stop the maze before it's done drawing
-      this.timeoutIds.push(timeoutId);
-    }, this)
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Sidewinder Maze", (this.cellSize * this.mazeWidth) / 2, (this.cellSize * this.mazeHeight) / 2);
   }
 }
 
-export default BinaryTreeMaze;
+export default SideWinderMaze;
