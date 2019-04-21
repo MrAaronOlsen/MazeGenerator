@@ -11,9 +11,12 @@ export default class Run extends Component {
   constructor(props) {
     super(props);
 
-    this.canvasRef = React.createRef();
-    this.state = this.getCalculatedState(this.props.initialSize, this.props.initialTimeout);
+    this.state = {
+      width: 600,
+      height: 600
+    }
 
+    this.canvasRef = React.createRef();
     this.props.handleState("buildMaze", this.build.bind(this));
   }
 
@@ -24,15 +27,13 @@ export default class Run extends Component {
       case "Sidewinder":
         return new SideWinderMaze();
       default:
-        return new BinaryTreeMaze();
+        return null;
     }
   }
 
   componentDidMount() {
     const canvas = this.canvasRef.current;
     this.ctx = canvas.getContext("2d");
-
-    this.build("Tree", this.state.size, this.state.timeout)
   }
 
   getCalculatedState(size, timeout) {
@@ -54,6 +55,10 @@ export default class Run extends Component {
   }
 
   build(maze, size, timeout) {
+    if (maze == null) {
+      return
+    }
+
     if (!!this.maze) { this.maze.stop() }
 
     var state = this.getCalculatedState(size, timeout);

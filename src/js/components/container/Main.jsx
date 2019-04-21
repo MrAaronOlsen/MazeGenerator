@@ -12,7 +12,7 @@ class Main extends Component {
     this.state = {
       mazeSize: 27,
       timeout: 25,
-      maze: "Tree"
+      maze: null
     };
 
     this.methods = {
@@ -67,9 +67,7 @@ class Main extends Component {
           mazeSize={this.state.mazeSize}
           timeout={this.state.timeout} />
 
-        <Run handleState={this.handleState}
-          initialSize={this.state.mazeSize}
-          initialTimeout={this.state.timeout} />
+        <Run handleState={this.handleState} />
       </div>
     )
   }
