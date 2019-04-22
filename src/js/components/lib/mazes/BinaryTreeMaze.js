@@ -1,4 +1,5 @@
 import Cell from '../cells/Cell.js'
+import Random from '../core/Random.js'
 
 class BinaryTreeMaze {
   constructor() {
@@ -9,8 +10,6 @@ class BinaryTreeMaze {
       function(col, row, type) { return new Cell(col, row - 1, type.call()) },
       function(col, row, type) { return new Cell(col - 1, row, type.call()) }
     ];
-
-    this.getRandom = () => { return Math.floor(Math.random() * 2) }
   }
 
   set(width, height, cellSize, timeout) {
@@ -65,7 +64,7 @@ class BinaryTreeMaze {
   }
 
   getRandomChoice(col, row, type) {
-    return this.choices[this.getRandom()].call(this, col, row, type)
+    return this.choices[Random.get(2)].call(this, col, row, type)
   }
 
   // Clears all currenly uncalled timeouts
