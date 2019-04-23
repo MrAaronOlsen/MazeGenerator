@@ -10,9 +10,10 @@ class Floor {
 
   draw(ctx, x, y, size) {
     ctx.beginPath();
+
     ctx.fillStyle = "rgba(219, 180, 127, 1)";
-    ctx.rect(x, y, size, size);
-    ctx.fill();
+    ctx.fillRect(x, y, size, size);
+
     ctx.closePath();
   }
 }

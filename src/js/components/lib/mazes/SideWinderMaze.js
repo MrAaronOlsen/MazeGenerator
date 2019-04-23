@@ -1,22 +1,15 @@
+import Maze from './Maze.js'
 import Cell from '../cells/Cell.js'
 import Random from '../core/Random.js'
 
-class SideWinderMaze {
+class SideWinderMaze extends Maze {
   constructor() {
-    this.steps = [];
-    this.timeoutIds = [];
+    super();
 
     this.choices = [
       function(col, row, type) { return new Cell(col, row - 1, type.call()) },
       function(col, row, type) { return new Cell(col - 1, row, type.call()) }
     ];
-  }
-
-  set(width, height, cellSize, timeout) {
-    this.mazeWidth = width;
-    this.mazeHeight = height;
-    this.cellSize = cellSize;
-    this.timeout = timeout;
   }
 
   build() {
@@ -98,30 +91,6 @@ class SideWinderMaze {
     }
 
     return potentials[Random.get(potentials.length)]
-  }
-
-  // Clears all currenly uncalled timeouts
-  stop() {
-    this.timeoutIds.forEach(timeoutId => {
-      window.clearTimeout(timeoutId);
-    })
-
-    this.steps = [];
-  }
-
-  draw(ctx) {
-    var cellSize = this.cellSize;
-
-    this.steps.forEach((cells, index) => {
-      let timeoutId = setTimeout(() => {
-        cells.forEach((cell => {
-          cell.draw(ctx, cellSize)
-        }))
-      }, this.timeout * index)
-
-      // Store the timeout id in case we want to stop the maze before it's done drawing
-      this.timeoutIds.push(timeoutId);
-    }, this)
   }
 }
 
