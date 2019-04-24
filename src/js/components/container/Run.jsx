@@ -4,10 +4,11 @@ import ReactDOM from "react-dom";
 import Canvas from "../presentational/Canvas.jsx";
 import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
 import SideWinderMaze from "../lib/mazes/SideWinderMaze.js";
+import NoOpMaze from "../lib/mazes/NoOpMaze.js";
 
 import './run.scss'
 
-export default class Run extends Component {
+class Run extends Component {
   constructor(props) {
     super(props);
 
@@ -27,7 +28,7 @@ export default class Run extends Component {
       case "Sidewinder":
         return new SideWinderMaze();
       default:
-        return null;
+        return new NoOpMaze();
     }
   }
 
@@ -36,29 +37,53 @@ export default class Run extends Component {
     this.ctx = canvas.getContext("2d");
   }
 
+  // Tries to find a whole number render size of the Maze to prevent funny rendering anomalies
   getCalculatedState(size, timeout) {
+    // Maze sizes must be even numbers and cannot be less than 5 or greater than 501
     if (size % 2 == 0 || size < 5 || size > 501) {
       throw "Map size must be an odd number and greater than 5"
     }
 
-    var width = 600 - (600 % size);
-    var height = 600 - (600 % size);
+    // Aim for 600px
+    var width = 600;
+
+    // Increase size until we get no remainder
+    while (width % size != 0) {
+      width++;
+
+      // If width gets too big reverse
+      if (width > 620) {
+        width = 599;
+
+        // Decrease size until we get no remainder
+        while (width % size != 0) {
+          width--;
+
+          // If we still haven't found something fall back to gaurenteed result
+          if (width < 580) {
+
+            // Will find something that fits, but could be undesirable size (aka, really small)
+            width = 600 - (600 % size);
+            break;
+          }
+        }
+      }
+    }
+
+    // Cell Width should always be a whole number now
     var cellWidth = width / size;
 
+    // Returns a state object
     return {
       size: size,
       width: width,
-      height: height,
+      height: width,
       cellWidth: cellWidth,
       timeout: timeout
     }
   }
 
   build(maze, size, timeout) {
-    if (maze == null) {
-      return
-    }
-
     if (!!this.maze) { this.maze.stop() }
 
     var state = this.getCalculatedState(size, timeout);
@@ -73,22 +98,6 @@ export default class Run extends Component {
     this.maze.draw(this.ctx);
   }
 
-  draw(ctx) {
-  }
-
-  update() {
-  }
-
-  keyDown(key) {
-  }
-
-  loop() {
-    this.draw(this.ctx);
-    this.update();
-
-    requestAnimationFrame(this.loop.bind(this));
-  }
-
   render() {
     return (
       <div id='canvas-wrapper'>
@@ -97,3 +106,5 @@ export default class Run extends Component {
     );
   }
 }
+
+export default Run;

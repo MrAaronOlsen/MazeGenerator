@@ -50,11 +50,10 @@ class Main extends Component {
   }
 
   getMazeElements() {
-    var elements = [];
-    elements.push({text: "Binary Tree Maze", key: "maze", value: "Tree"})
-    elements.push({text: "Sidewinder Maze", key: "maze", value: "Sidewinder"})
-
-    return elements;
+    return [
+      {text: "Binary Tree Maze", key: "maze", value: "Tree"},
+      {text: "Sidewinder Maze", key: "maze", value: "Sidewinder"}
+    ];
   }
 
   render() {

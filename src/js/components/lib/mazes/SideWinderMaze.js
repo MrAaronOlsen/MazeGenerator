@@ -18,25 +18,6 @@ class SideWinderMaze extends Maze {
     this.placeDoors();
   }
 
-  buildWalls() {
-    var cells = [];
-
-    for (let row = 0; row< this.mazeHeight; row++) {
-
-      if (row % 2 == 0) {
-        for (let col = 0; col < this.mazeWidth; col++) {
-          cells.push(new Cell(col, row, Cell.wall()));
-        }
-      } else {
-        for (let col = 0; col < this.mazeWidth; col+=2) {
-          cells.push(new Cell(col, row, Cell.wall()));
-        }
-      }
-    }
-
-    this.steps.push(cells);
-  }
-
   cutMaze() {
     for (let row = 1; row < this.mazeHeight; row+=2) {
       this.cutRow(row)

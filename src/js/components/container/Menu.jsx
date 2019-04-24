@@ -5,7 +5,7 @@ import List from "../presentational/List.jsx";
 
 import './menu.scss'
 
-export default class Menu extends Component {
+class Menu extends Component {
 
   render() {
     return (
@@ -31,3 +31,5 @@ export default class Menu extends Component {
     )
   }
 }
+
+export default Menu;
