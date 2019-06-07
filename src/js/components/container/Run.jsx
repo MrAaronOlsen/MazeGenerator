@@ -4,7 +4,10 @@ import ReactDOM from "react-dom";
 import Canvas from "../presentational/Canvas.jsx";
 import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
 import SideWinderMaze from "../lib/mazes/SideWinderMaze.js";
+import RecursiveBacktrackingMaze from "../lib/mazes/RecursiveBacktrackingMaze.js";
 import NoOpMaze from "../lib/mazes/NoOpMaze.js";
+
+import SizeCalculator from "../lib/core/SizeCalculator.js";
 
 import './run.scss'
 
@@ -13,8 +16,8 @@ class Run extends Component {
     super(props);
 
     this.state = {
-      width: 600,
-      height: 600
+      pixWidth: 600,
+      pixHeight: 600
     }
 
     this.canvasRef = React.createRef();
@@ -27,6 +30,8 @@ class Run extends Component {
         return new BinaryTreeMaze();
       case "Sidewinder":
         return new SideWinderMaze();
+      case "RecursiveBacktracking":
+        return new RecursiveBacktrackingMaze();
       default:
         return new NoOpMaze();
     }
@@ -37,63 +42,17 @@ class Run extends Component {
     this.ctx = canvas.getContext("2d");
   }
 
-  // Tries to find a whole number render size of the Maze to prevent funny rendering anomalies
-  getCalculatedState(size, timeout) {
-    // Maze sizes must be even numbers and cannot be less than 5 or greater than 501
-    if (size % 2 == 0 || size < 5 || size > 501) {
-      throw "Map size must be an odd number and greater than 5"
-    }
-
-    // Aim for 600px
-    var width = 600;
-
-    // Increase size until we get no remainder
-    while (width % size != 0) {
-      width++;
-
-      // If width gets too big reverse
-      if (width > 620) {
-        width = 599;
-
-        // Decrease size until we get no remainder
-        while (width % size != 0) {
-          width--;
-
-          // If we still haven't found something fall back to gaurenteed result
-          if (width < 580) {
-
-            // Will find something that fits, but could be undesirable size (aka, really small)
-            width = 600 - (600 % size);
-            break;
-          }
-        }
-      }
-    }
-
-    // Cell Width should always be a whole number now
-    var cellWidth = width / size;
-
-    // Returns a state object
-    return {
-      size: size,
-      width: width,
-      height: width,
-      cellWidth: cellWidth,
-      timeout: timeout
-    }
-  }
-
   build(maze, size, timeout) {
     if (!!this.maze) { this.maze.stop() }
 
-    var state = this.getCalculatedState(size, timeout);
+    var state = SizeCalculator.get(size, timeout);
 
     this.maze = this.getMaze(maze);
-    this.maze.set(state.size, state.size, state.cellWidth, state.timeout);
+    this.maze.set(state.gridSize, state.gridSize, state.cellWidth, state.timeout);
 
     this.setState(state);
 
-    this.ctx.clearRect(0, 0, this.state.width, this.state.height);
+    this.ctx.clearRect(0, 0, state.pixWidth, state.pixHeight);
     this.maze.build()
     this.maze.draw(this.ctx);
   }
@@ -101,7 +60,7 @@ class Run extends Component {
   render() {
     return (
       <div id='canvas-wrapper'>
-        <Canvas name="canvas" width={this.state.width} height={this.state.height} ref={this.canvasRef}/>
+        <Canvas name="canvas" width={this.state.pixWidth} height={this.state.pixHeight} ref={this.canvasRef}/>
       </div>
     );
   }

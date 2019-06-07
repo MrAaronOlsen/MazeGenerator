@@ -18,29 +18,26 @@ class BinaryTreeMaze extends Maze {
   }
 
   cutMaze(row, col) {
-    for (let row = 1; row < this.mazeHeight; row+=2) {
-      for (let col = 1; col < this.mazeWidth; col+=2) {
-        let cells = [];
+    for (let row = 1; row < this.getGridHeight(); row+=2) {
+      for (let col = 1; col < this.getGridWidth(); col+=2) {
+        let step = [];
 
         // Always make current cell a floor
-        cells.push(new Cell(col, row, Cell.floor()));
+        step.push(new Cell(col, row, Cell.floor()));
 
         var dirs = [];
         if (row != 1) dirs.push("up");
         if (col != 1) dirs.push("back");
 
+        // As long as we have some direction to go randomly choose one.
         if (dirs.length > 0) {
-          cells.push(this.choices[dirs[Random.get(dirs.length)]].call(this, col, row, Cell.floor))
+          step.push(this.choices[dirs[Random.get(dirs.length)]].call(this, col, row, Cell.floor))
         }
 
         // Adds the new cells to the draw steps
-        this.steps.push(cells);
+        this.addStep(step)
       }
     }
-  }
-
-  getRandomChoice(col, row, type) {
-    return this.choices[Random.get(2)].call(this, col, row, type)
   }
 }
 

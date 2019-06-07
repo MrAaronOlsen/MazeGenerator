@@ -51,8 +51,9 @@ class Main extends Component {
 
   getMazeElements() {
     return [
-      {text: "Binary Tree Maze", key: "maze", value: "Tree"},
-      {text: "Sidewinder Maze", key: "maze", value: "Sidewinder"}
+      {text: "Binary Tree", key: "maze", value: "Tree"},
+      {text: "Sidewinder", key: "maze", value: "Sidewinder"},
+      {text: "Recursive Backtracking", key: "maze", value: "RecursiveBacktracking"}
     ];
   }
 

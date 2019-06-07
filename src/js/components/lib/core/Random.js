@@ -11,10 +11,21 @@ class Random {
   static flipCoin() {
     var side = this.get(2);
 
-    return {
-      heads: side === 0,
-      tails: side === 1
-    }
+    return new Coin(side === 0);
+  }
+}
+
+class Coin {
+  constructor(heads) {
+    this.heads = heads;
+  }
+
+  isHeads() {
+    return this.heads === true;
+  }
+
+  isTails() {
+    return this.heads === false;
   }
 }
 
