@@ -6,13 +6,13 @@ class Maze {
     this.timeoutIds = [];
   }
 
-  set(gridWidth, gridHeight, cellSize, timeout) {
-    this.gridWidth = gridWidth;
-    this.gridHeight = gridHeight;
+  set(mazeSize, gridSize, cellSize, timeout) {
+    this.mazeSize = mazeSize;
+    this.gridSize = gridSize;
     this.cellSize = cellSize;
     this.timeout = timeout;
 
-    this.center = (gridWidth / 2) * this.cellSize
+    this.center = (gridSize / 2) * this.cellSize
   }
 
   addStep(step) {
@@ -28,24 +28,27 @@ class Maze {
   }
 
   getMazeHeight() {
-    return this.mazeHeight;
+    return this.mazeSize;
   }
 
   getMazeWidth() {
-    return this.mazeWidth;
+    return this.mazeSize;
   }
 
   getGridHeight() {
-    return this.gridHeight;
+    return this.gridSize;
   }
 
   getGridWidth() {
-    return this.gridWidth;
+    return this.gridSize;
   }
 
   // Builds a 2d array map of maze cells
   buildMap() {
-    return new Array(this.getMazeHeight()).fill(null).map(() => new Array(this.getMazeWidth()).fill(null));
+    let height = this.getMazeHeight();
+    let width = this.getMazeWidth();
+
+    return new Array(height).fill(null).map(() => new Array(width).fill(null));
   }
 
 

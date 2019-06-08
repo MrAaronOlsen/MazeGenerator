@@ -48,7 +48,7 @@ class Run extends Component {
     var state = SizeCalculator.get(size, timeout);
 
     this.maze = this.getMaze(maze);
-    this.maze.set(state.gridSize, state.gridSize, state.cellWidth, state.timeout);
+    this.maze.set(state.mazeSize, state.gridSize, state.cellWidth, state.timeout);
 
     this.setState(state);
 

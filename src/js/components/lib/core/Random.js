@@ -13,6 +13,23 @@ class Random {
 
     return new Coin(side === 0);
   }
+
+  static shuffle(array) {
+    var index = array.length;
+    var temp, random;
+    var randArray = [].concat(array)
+
+    while (index > 0) {
+      random = this.get(index)
+      index -= 1;
+
+      temp = randArray[index];
+      randArray[index] = randArray[random];
+      randArray[random] = temp;
+    }
+
+    return randArray;
+  }
 }
 
 class Coin {

@@ -1,6 +1,7 @@
 import Wall from '../cells/Wall.js';
 import Floor from '../cells/Floor.js';
 import Door from '../cells/Door.js';
+import Fog from '../cells/Fog.js';
 
 class Cell {
   constructor(x, y, type) {
@@ -27,6 +28,10 @@ class Cell {
 
   static door() {
     return new Door();
+  }
+
+  static fog() {
+    return new Fog();
   }
 }
 
