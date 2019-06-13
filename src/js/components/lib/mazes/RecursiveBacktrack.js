@@ -3,7 +3,7 @@ import Cell from '../cells/Cell.js'
 import Random from '../core/Random.js'
 import Vector from '../core/Vector.js'
 
-class RecursiveBacktrackingMaze extends Maze {
+class RecursiveBacktrack extends Maze {
   constructor() {
     super();
 
@@ -14,7 +14,11 @@ class RecursiveBacktrackingMaze extends Maze {
     this.mazeMap = this.buildMap();
 
     this.buildWalls();
-    this.cutMaze(0, 0);
+
+    let x = Random.get(this.getMazeWidth() - 1)
+    let y = Random.get(this.getMazeHeight() - 1)
+
+    this.cutMaze(x, y);
   }
 
   cutMaze(x, y) {
@@ -46,4 +50,4 @@ class RecursiveBacktrackingMaze extends Maze {
   }
 }
 
-export default RecursiveBacktrackingMaze;
+export default RecursiveBacktrack;

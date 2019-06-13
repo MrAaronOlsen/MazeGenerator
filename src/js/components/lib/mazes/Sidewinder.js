@@ -2,7 +2,7 @@ import Maze from './Maze.js'
 import Cell from '../cells/Cell.js'
 import Random from '../core/Random.js'
 
-class SideWinderMaze extends Maze {
+class Sidewinder extends Maze {
   constructor() {
     super();
 
@@ -65,4 +65,4 @@ class SideWinderMaze extends Maze {
   }
 }
 
-export default SideWinderMaze;
+export default Sidewinder;

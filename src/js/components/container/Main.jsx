@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 
 import Run from './Run.jsx'
 import Menu from './Menu.jsx'
+import Mazes from '../lib/mazes/Mazes.js'
+
 import "./main.scss"
 
 class Main extends Component {
@@ -49,21 +51,13 @@ class Main extends Component {
     this.methods[method].call(this)
   }
 
-  getMazeElements() {
-    return [
-      {text: "Binary Tree", key: "maze", value: "Tree"},
-      {text: "Sidewinder", key: "maze", value: "Sidewinder"},
-      {text: "Recursive Backtracking", key: "maze", value: "RecursiveBacktracking"}
-    ];
-  }
-
   render() {
     return (
       <div id="main-window">
         <Menu
           handleInput={this.handleInput}
           handleCall={this.handleCall}
-          mazeElements={this.getMazeElements()}
+          mazeElements={Mazes.getMenuList()}
           mazeSize={this.state.mazeSize}
           timeout={this.state.timeout} />
 

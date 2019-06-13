@@ -2,12 +2,9 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 import Canvas from "../presentational/Canvas.jsx";
-import BinaryTreeMaze from "../lib/mazes/BinaryTreeMaze.js";
-import SideWinderMaze from "../lib/mazes/SideWinderMaze.js";
-import RecursiveBacktrackingMaze from "../lib/mazes/RecursiveBacktrackingMaze.js";
-import NoOpMaze from "../lib/mazes/NoOpMaze.js";
 
 import SizeCalculator from "../lib/core/SizeCalculator.js";
+import Mazes from "../lib/mazes/Mazes.js"
 
 import './run.scss'
 
@@ -24,19 +21,6 @@ class Run extends Component {
     this.props.handleState("buildMaze", this.build.bind(this));
   }
 
-  getMaze(maze) {
-    switch (maze) {
-      case "Tree":
-        return new BinaryTreeMaze();
-      case "Sidewinder":
-        return new SideWinderMaze();
-      case "RecursiveBacktracking":
-        return new RecursiveBacktrackingMaze();
-      default:
-        return new NoOpMaze();
-    }
-  }
-
   componentDidMount() {
     const canvas = this.canvasRef.current;
     this.ctx = canvas.getContext("2d");
@@ -47,7 +31,7 @@ class Run extends Component {
 
     var state = SizeCalculator.get(size, timeout);
 
-    this.maze = this.getMaze(maze);
+    this.maze = Mazes.get(maze);
     this.maze.set(state.mazeSize, state.gridSize, state.cellWidth, state.timeout);
 
     this.setState(state);

@@ -2,7 +2,7 @@ import Maze from './Maze.js'
 import Cell from '../cells/Cell.js'
 import Random from '../core/Random.js'
 
-class BinaryTreeMaze extends Maze {
+class BinaryTree extends Maze {
   constructor() {
     super();
 
@@ -41,4 +41,4 @@ class BinaryTreeMaze extends Maze {
   }
 }
 
-export default BinaryTreeMaze;
+export default BinaryTree;
