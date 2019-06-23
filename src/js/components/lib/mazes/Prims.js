@@ -1,74 +1,63 @@
 import Maze from './Maze.js'
-import Cell from '../cells/Cell.js'
+import Grid from './Grid.js'
+import Cell from '../cells/CellPoint.js'
 import Random from '../core/Random.js'
-import Vector from '../core/Vector.js'
+import Point from '../core/Vector.js'
 
 class Prims extends Maze {
   constructor() {
     super();
 
-    this.dirs = [new Vector(1, 0), new Vector(-1, 0), new Vector(0, 1), new Vector(0, -1)]
+    this.dirs = [new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1)];
     this.frontier = [];
   }
 
   build() {
-    this.mazeMap = this.buildMap();
+    this.grid = new Grid(this.getMazeWidth(), this.getMazeHeight());
 
     this.buildWalls();
     this.cutMaze(this.getRandomStartingPoint());
   }
 
-  cutMaze(point) {
-    this.mark(point.x, point.y, this.mazeMap, this.frontier);
+  cutMaze(start) {
+    this.mark(start);
 
     while (this.frontier.length > 0) {
       let next = this.frontier.splice(Random.get(this.frontier.length - 1), 1)[0]
-
-      this.mark(next[0], next[1], this.mazeMap, this.frontier);
+      this.mark(next);
     }
   }
 
-  mark(x, y, grid, frontier) {
-    let gridX = (x * 2) + 1;
-    let gridY = (y * 2) + 1;
+  mark(point) {
+    this.grid.set(point, 0);
 
-    grid[y][x] = 0;
-
-    let step = []
-    step.push(new Cell(gridX, gridY, Cell.floor()));
+    let gridPoint = this.getGridPoint(point);
+    let step = [new Cell(gridPoint, Cell.floor())];
 
     this.dirs.forEach(dir => {
-      let dirX = x + dir.x;
-      let dirY = y + dir.y;
+      let dirPoint = point.plus(dir);
 
-      if (this.addFrontier(dirX, dirY, grid, frontier)) {
-        let fogX = (dirX * 2) + 1;
-        let fogY = (dirY * 2) + 1;
+      if (this.addFrontier(dirPoint)) {
+        let frontierPoint = this.getGridPoint(dirPoint);
+        let floorPoint = gridPoint.plus(dir);
 
-        let floorX = gridX + dir.x;
-        let floorY = gridY + dir.y;
-
-        step.push(new Cell(floorX, floorY, Cell.floor()));
-        step.push(new Cell(fogX, fogY, Cell.door()));
+        step.push(new Cell(floorPoint, Cell.floor()));
+        step.push(new Cell(frontierPoint, Cell.door()));
       }
     }, this)
 
     this.addStep(step);
   }
 
-  addFrontier(x, y, grid, frontier) {
-    if (this.isInsideMaze(x, y) && grid[y][x] == null) {
-      grid[y][x] = 1;
-      frontier.push([x, y])
+  addFrontier(point) {
+    if (this.isInsideMaze(point) && this.grid.isEmpty(point)) {
+      this.grid.set(point, 1);
+      this.frontier.push(point)
 
       return true;
     }
 
     return false;
-  }
-
-  isInsideMaze(x, y) {
-    return x >= 0 && x < this.getMazeWidth() && y >= 0 && y < this.getMazeHeight();
   }
 }
 

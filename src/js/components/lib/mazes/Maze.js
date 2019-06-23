@@ -6,6 +6,8 @@ class Maze {
   constructor() {
     this.steps = [];
     this.timeoutIds = [];
+
+    this.singlePoint = new Vect(1, 1);
   }
 
   set(mazeSize, gridSize, cellSize, timeout) {
@@ -49,7 +51,7 @@ class Maze {
     return new Vect(Random.get(this.getMazeWidth() - 1), Random.get(this.getMazeHeight() - 1))
   }
 
-  // Builds a 2d array map of maze cells
+  // Builds a 2d array map of maze cells.
   buildMap() {
     let height = this.getMazeHeight();
     let width = this.getMazeWidth();
@@ -100,6 +102,16 @@ class Maze {
       // Track timeouts
       this.timeoutIds.push(timeoutId);
     }, this)
+  }
+
+  // Returns true if both x and y are within the bounds of the mazeMap;
+  isInsideMaze(point) {
+    return point.x >= 0 && point.x < this.getMazeWidth() && point.y >= 0 && point.y < this.getMazeHeight();
+  }
+
+  // Converts a mazeMap point to a mazeGrid point for drawing
+  getGridPoint(point) {
+    return point.times(2).plus(this.singlePoint)
   }
 }
 
