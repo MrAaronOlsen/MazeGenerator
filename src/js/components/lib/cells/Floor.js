@@ -1,3 +1,5 @@
+import Colors from '../core/Colors.js'
+
 class Floor {
   constructor() {
     if(!!Floor.instance) {
@@ -11,7 +13,7 @@ class Floor {
   draw(ctx, x, y, size) {
     ctx.beginPath();
 
-    ctx.fillStyle = "rgba(219, 180, 127, 1)";
+    ctx.fillStyle = Colors.ORANGE;
     ctx.fillRect(x, y, size, size);
 
     ctx.closePath();

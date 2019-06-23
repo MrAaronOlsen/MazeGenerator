@@ -6,7 +6,7 @@ class Input extends Component {
   render() {
     return (
       <input className={this.props.class}
-        type="text"
+        type={this.props.type}
         data-key={this.props.dataKey}
         value={this.props.value}
         onChange={this.props.handleInput} />
@@ -21,7 +21,8 @@ Input.propTypes = {
     PropTypes.string,
     PropTypes.number
   ]),
-  class: PropTypes.string
+  class: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default Input;

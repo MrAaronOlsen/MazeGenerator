@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 import Run from './Run.jsx'
-import Menu from './Menu.jsx'
+import Menu from '../presentational/Menu.jsx'
 import Mazes from '../lib/mazes/Mazes.js'
 
 import "./main.scss"
@@ -12,8 +12,8 @@ class Main extends Component {
     super(props);
 
     this.state = {
-      mazeSize: 27,
-      timeout: 25,
+      mazeSize: 10,
+      timeout: 20,
       maze: null
     };
 
@@ -23,6 +23,7 @@ class Main extends Component {
 
     this.handleState = this.handleState.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleCall = this.handleCall.bind(this);
   }
 
@@ -34,16 +35,20 @@ class Main extends Component {
 
   handleInput(event) {
     var value = event.target.value;
-
-    if (value == undefined) {
-      value = event.target.dataset.value
-    }
-
     var key = event.target.dataset.key;
 
-    this.setState({
-      [key]: value
-    })
+    if (event.target.type === 'number') {
+      value = Number.parseInt(value);
+    }
+
+    this.handleState(key, value)
+  }
+
+  handleClick(event) {
+    var value = event.target.dataset.value;
+    var key = event.target.dataset.key;
+
+    this.handleState(key, value)
   }
 
   handleCall(event) {
@@ -56,8 +61,9 @@ class Main extends Component {
       <div id="main-window">
         <Menu
           handleInput={this.handleInput}
+          handleClick={this.handleClick}
           handleCall={this.handleCall}
-          mazeElements={Mazes.getMenuList()}
+          mazeList={Mazes.getMenuList()}
           mazeSize={this.state.mazeSize}
           timeout={this.state.timeout} />
 

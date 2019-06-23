@@ -1,4 +1,6 @@
 import Cell from '../cells/Cell.js'
+import Random from '../core/Random.js'
+import Vect from '../core/Vector.js'
 
 class Maze {
   constructor() {
@@ -43,6 +45,10 @@ class Maze {
     return this.gridSize;
   }
 
+  getRandomStartingPoint() {
+    return new Vect(Random.get(this.getMazeWidth() - 1), Random.get(this.getMazeHeight() - 1))
+  }
+
   // Builds a 2d array map of maze cells
   buildMap() {
     let height = this.getMazeHeight();
@@ -50,7 +56,6 @@ class Maze {
 
     return new Array(height).fill(null).map(() => new Array(width).fill(null));
   }
-
 
   // Creates a grid of walls.
   buildWalls() {

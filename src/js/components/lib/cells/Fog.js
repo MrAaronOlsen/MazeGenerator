@@ -1,3 +1,5 @@
+import Colors from '../core/Colors.js'
+
 class Fog {
   constructor() {
     if(!!Fog.instance) {
@@ -11,7 +13,7 @@ class Fog {
   draw(ctx, x, y, size) {
     ctx.beginPath();
 
-    ctx.fillStyle = "rgba(190, 186, 180, 1)";
+    ctx.fillStyle = Colors.GREY;
     ctx.fillRect(x, y, size, size);
 
     ctx.closePath();

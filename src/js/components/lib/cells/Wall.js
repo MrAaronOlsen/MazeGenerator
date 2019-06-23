@@ -1,3 +1,5 @@
+import Colors from '../core/Colors.js'
+
 class Wall {
   constructor() {
     if(!!Wall.instance) {
@@ -11,7 +13,7 @@ class Wall {
   draw(ctx, x, y, size) {
     ctx.beginPath();
 
-    ctx.fillStyle = "rgba(111, 109, 109, 1)";
+    ctx.fillStyle = Colors.DARK_GREY;
     ctx.fillRect(x, y, size, size);
 
     ctx.closePath();
