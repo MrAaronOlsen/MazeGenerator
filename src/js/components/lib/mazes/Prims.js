@@ -17,6 +17,7 @@ class Prims extends Maze {
 
     this.buildWalls();
     this.cutMaze(this.getRandomStartingPoint());
+    this.buildDoors();
   }
 
   cutMaze(start) {
@@ -31,14 +32,14 @@ class Prims extends Maze {
   mark(point) {
     this.grid.set(point, 0);
 
-    let gridPoint = this.getGridPoint(point);
+    let gridPoint = this.getDisplayPoint(point);
     let step = [new Cell(gridPoint, Cell.floor())];
 
     this.dirs.forEach(dir => {
       let dirPoint = point.plus(dir);
 
       if (this.addFrontier(dirPoint)) {
-        let frontierPoint = this.getGridPoint(dirPoint);
+        let frontierPoint = this.getDisplayPoint(dirPoint);
         let floorPoint = gridPoint.plus(dir);
 
         step.push(new Cell(floorPoint, Cell.floor()));

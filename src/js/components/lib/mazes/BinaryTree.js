@@ -15,11 +15,12 @@ class BinaryTree extends Maze {
   build() {
     this.buildWalls();
     this.cutMaze();
+    this.buildDoors();
   }
 
-  cutMaze(row, col) {
-    for (let row = 1; row < this.getGridHeight(); row+=2) {
-      for (let col = 1; col < this.getGridWidth(); col+=2) {
+  cutMaze() {
+    for (let row = 1; row < this.getGridHeight(); row += 2) {
+      for (let col = 1; col < this.getGridWidth(); col += 2) {
         let step = [];
 
         // Always make current cell a floor

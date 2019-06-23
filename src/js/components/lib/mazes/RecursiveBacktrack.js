@@ -1,52 +1,44 @@
 import Maze from './Maze.js'
-import Cell from '../cells/Cell.js'
+import Grid from './Grid.js'
+import Cell from '../cells/CellPoint.js'
 import Random from '../core/Random.js'
-import Vector from '../core/Vector.js'
+import Point from '../core/Vector.js'
 
 class RecursiveBacktrack extends Maze {
   constructor() {
     super();
 
-    this.dirs = [new Vector(1, 0), new Vector(-1, 0), new Vector(0, 1), new Vector(0, -1)]
+    this.dirs = [new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1)]
   }
 
   build() {
-    this.mazeMap = this.buildMap();
+    this.grid = new Grid(this.getMazeWidth(), this.getMazeHeight());
 
     this.buildWalls();
-
-    let x = Random.get(this.getMazeWidth() - 1)
-    let y = Random.get(this.getMazeHeight() - 1)
-
-    this.cutMaze(x, y);
+    this.cutMaze(this.getRandomStartingPoint());
+    this.buildDoors();
   }
 
-  cutMaze(x, y) {
+  cutMaze(point) {
     let randDirs = Random.shuffle(this.dirs)
-    let gridX = (x * 2) + 1;
-    let gridY = (y * 2) + 1;
+    let gridPoint = this.getDisplayPoint(point);
 
-    this.mazeMap[y][x] = 1;
+    this.grid.set(point, 1);
 
-    this.addStep([new Cell(gridX, gridY, Cell.fog())]);
+    this.addStep([new Cell(gridPoint, Cell.fog())]);
 
     randDirs.forEach(dir => {
-      let nextX = dir.x + x;
-      let nextY = dir.y + y;
+      let nextPoint = point.plus(dir);
 
-      if (this.isInsideMaze(nextX, nextY) && this.mazeMap[nextY][nextX] == null) {
-        this.addStep([new Cell(gridX + dir.x, gridY + dir.y, Cell.fog())]);
-        this.cutMaze(nextX, nextY)
+      if (this.isInsideMaze(nextPoint) && this.grid.isEmpty(nextPoint)) {
+        this.addStep([new Cell(gridPoint.plus(dir), Cell.fog())]);
+        this.cutMaze(nextPoint)
 
-        this.addStep([new Cell(gridX + dir.x, gridY + dir.y, Cell.floor())]);
+        this.addStep([new Cell(gridPoint.plus(dir), Cell.floor())]);
       }
     }, this)
 
-    this.addStep([new Cell(gridX, gridY, Cell.floor())]);
-  }
-
-  isInsideMaze(x, y) {
-    return x >= 0 && x < this.getMazeWidth() && y >= 0 && y < this.getMazeHeight();
+    this.addStep([new Cell(gridPoint, Cell.floor())]);
   }
 }
 

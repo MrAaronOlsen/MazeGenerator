@@ -15,11 +15,11 @@ class Sidewinder extends Maze {
   build() {
     this.buildWalls();
     this.cutMaze();
-    this.placeDoors();
+    this.buildDoors();
   }
 
   cutMaze() {
-    for (let row = 1; row < this.getGridHeight(); row+=2) {
+    for (let row = 1; row < this.getGridHeight(); row += 2) {
       this.cutRow(row)
     }
   }
@@ -27,7 +27,7 @@ class Sidewinder extends Maze {
   cutRow(row) {
     var set = [];
 
-    for (let col = 1; col < this.getGridWidth(); col+=2) {
+    for (let col = 1; col < this.getGridWidth(); col += 2) {
       let step = [];
 
       // We always make the current cell a floor
@@ -57,11 +57,6 @@ class Sidewinder extends Maze {
       // Adds the new cells to the draw steps
       this.addStep(step);
     }
-  }
-
-  placeDoors() {
-    this.addStep([new Cell(1, 0, Cell.door())])
-    this.addStep([new Cell(this.getGridWidth() - 2, this.getGridHeight() - 1, Cell.door())])
   }
 }
 

@@ -1,13 +1,13 @@
 import Cell from '../cells/Cell.js'
 import Random from '../core/Random.js'
-import Vect from '../core/Vector.js'
+import Point from '../core/Vector.js'
 
 class Maze {
   constructor() {
     this.steps = [];
     this.timeoutIds = [];
 
-    this.singlePoint = new Vect(1, 1);
+    this.singlePoint = new Point(1, 1);
   }
 
   set(mazeSize, gridSize, cellSize, timeout) {
@@ -48,15 +48,7 @@ class Maze {
   }
 
   getRandomStartingPoint() {
-    return new Vect(Random.get(this.getMazeWidth() - 1), Random.get(this.getMazeHeight() - 1))
-  }
-
-  // Builds a 2d array map of maze cells.
-  buildMap() {
-    let height = this.getMazeHeight();
-    let width = this.getMazeWidth();
-
-    return new Array(height).fill(null).map(() => new Array(width).fill(null));
+    return new Point(Random.get(this.getMazeWidth() - 1), Random.get(this.getMazeHeight() - 1))
   }
 
   // Creates a grid of walls.
@@ -110,8 +102,35 @@ class Maze {
   }
 
   // Converts a mazeMap point to a mazeGrid point for drawing
-  getGridPoint(point) {
+  getDisplayPoint(point) {
     return point.times(2).plus(this.singlePoint)
+  }
+
+  buildDoors() {
+    var start;
+    var end;
+
+    var startSide = Random.get(2);
+    if (startSide == 1) {
+      start = this.getDisplayPoint(new Point(Random.get(this.getMazeWidth() - 1), 0));
+      start.sub(new Point(0, 1));
+    } else {
+      start = this.getDisplayPoint(new Point(0, Random.get(this.getMazeHeight() - 1)));
+      start.sub(new Point(1, 0));
+    }
+
+    this.addStep([new Cell(start.x, start.y, Cell.door())])
+
+    var endSide = Random.get(2);
+    if (endSide == 1) {
+      end = this.getDisplayPoint(new Point(Random.get(this.getMazeWidth() - 1), this.getMazeHeight() - 1));
+      end.add(new Point(0, 1));
+    } else {
+      end = this.getDisplayPoint(new Point(this.getMazeWidth() - 1, Random.get(this.getMazeHeight() - 1)));
+      end.add(new Point(1, 0));
+    }
+
+    this.addStep([new Cell(end.x, end.y, Cell.door())])
   }
 }
 
