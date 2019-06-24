@@ -15,7 +15,8 @@ class Sidewinder extends Maze {
   build() {
     this.buildWalls();
     this.cutMaze();
-    this.buildDoors();
+    this.buildDoors();ls
+    
   }
 
   cutMaze() {

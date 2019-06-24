@@ -1,5 +1,5 @@
 import Maze from './Maze.js'
-import Grid from './Grid.js'
+import Grid from '../core/Grid.js'
 import Cell from '../cells/CellPoint.js'
 import Random from '../core/Random.js'
 import Point from '../core/Vector.js'
@@ -8,7 +8,6 @@ class Prims extends Maze {
   constructor() {
     super();
 
-    this.dirs = [new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1)];
     this.frontier = [];
   }
 

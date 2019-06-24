@@ -5,6 +5,8 @@ import Run from './Run.jsx'
 import Menu from '../presentational/Menu.jsx'
 import Mazes from '../lib/mazes/Mazes.js'
 
+import Random from '../lib/core/Random.js'
+
 import "./main.scss"
 
 class Main extends Component {

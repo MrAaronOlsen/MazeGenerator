@@ -8,6 +8,7 @@ class Maze {
     this.timeoutIds = [];
 
     this.singlePoint = new Point(1, 1);
+    this.dirs = [new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1)];
   }
 
   set(mazeSize, gridSize, cellSize, timeout) {
@@ -96,41 +97,43 @@ class Maze {
     }, this)
   }
 
-  // Returns true if both x and y are within the bounds of the mazeMap;
+  // Returns true if both x and y are within the bounds of the mazeMap
   isInsideMaze(point) {
     return point.x >= 0 && point.x < this.getMazeWidth() && point.y >= 0 && point.y < this.getMazeHeight();
   }
 
-  // Converts a mazeMap point to a mazeGrid point for drawing
+  // Converts a mazeMap point to a display point for drawing
   getDisplayPoint(point) {
     return point.times(2).plus(this.singlePoint)
   }
 
+  // Adds random door placements to steps. Ugly as heck.
   buildDoors() {
+    var width = Math.round(this.getMazeWidth() / 4);
+    var height = Math.round(this.getMazeHeight() / 4);
+
     var start;
     var end;
 
-    var startSide = Random.get(2);
-    if (startSide == 1) {
-      start = this.getDisplayPoint(new Point(Random.get(this.getMazeWidth() - 1), 0));
+    if (Random.flipCoin().isHeads()) {
+      start = this.getDisplayPoint(new Point(Random.get(width), 0));
       start.sub(new Point(0, 1));
     } else {
-      start = this.getDisplayPoint(new Point(0, Random.get(this.getMazeHeight() - 1)));
+      start = this.getDisplayPoint(new Point(0, Random.get(height)));
       start.sub(new Point(1, 0));
     }
 
-    this.addStep([new Cell(start.x, start.y, Cell.door())])
-
-    var endSide = Random.get(2);
-    if (endSide == 1) {
-      end = this.getDisplayPoint(new Point(Random.get(this.getMazeWidth() - 1), this.getMazeHeight() - 1));
+    if (Random.flipCoin().isHeads()) {
+      let range = Random.getRange(this.getMazeWidth() - width, this.getMazeWidth() - 1);
+      end = this.getDisplayPoint(new Point(range, this.getMazeHeight() - 1));
       end.add(new Point(0, 1));
     } else {
-      end = this.getDisplayPoint(new Point(this.getMazeWidth() - 1, Random.get(this.getMazeHeight() - 1)));
+      let range = Random.getRange(this.getMazeHeight() - height, this.getMazeHeight() - 1);
+      end = this.getDisplayPoint(new Point(this.getMazeWidth() - 1, range));
       end.add(new Point(1, 0));
     }
 
-    this.addStep([new Cell(end.x, end.y, Cell.door())])
+    this.addStep([new Cell(end.x, end.y, Cell.door()), new Cell(start.x, start.y, Cell.door())])
   }
 }
 

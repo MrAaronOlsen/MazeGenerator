@@ -1,7 +1,7 @@
 class Random {
 
   static getRange(min, max) {
-    return Math.random() * (max - min) + min
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   static get(max) {

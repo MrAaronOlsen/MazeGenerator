@@ -3,7 +3,7 @@ class SizeCalculator {
   // Tries to find a whole number render size of the Maze to prevent funny rendering anomalies
   static get(size, timeout) {
     size = Number.parseInt(size);
-    
+
     // Maze sizes must be even numbers and cannot be less than 5 or greater than 501
     if (size === 0 || size > 200) {
       throw "Map size must be greater than 0 and no greater than 200."
