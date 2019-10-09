@@ -15,20 +15,24 @@ class Random {
   }
 
   static shuffle(array) {
+    return this.shuffle!([].concat(array))
+  }
+
+  static shuffle!(array) {
     var index = array.length;
-    var temp, random;
-    var randArray = [].concat(array)
+    var tempStorage;
+    var randomIndex;
 
     while (index > 0) {
-      random = this.get(index)
+      randomIndex = this.get(index)
       index -= 1;
 
-      temp = randArray[index];
-      randArray[index] = randArray[random];
-      randArray[random] = temp;
+      tempStorage = array[index];
+      array[index] = array[randomIndex];
+      array[randomIndex] = tempStorage;
     }
 
-    return randArray;
+    return array;
   }
 }
 
