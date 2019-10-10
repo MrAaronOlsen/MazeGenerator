@@ -15,3 +15,5 @@ class Edge {
     return this.node2;
   }
 }
+
+export default Edge;

@@ -15,10 +15,10 @@ class Random {
   }
 
   static shuffle(array) {
-    return this.shuffle!([].concat(array))
+    return this.shuffleMutate([].concat(array))
   }
 
-  static shuffle!(array) {
+  static shuffleMutate(array) {
     var index = array.length;
     var tempStorage;
     var randomIndex;
