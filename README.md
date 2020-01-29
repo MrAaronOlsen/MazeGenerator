@@ -1,5 +1,6 @@
 # MazeGenerator
 ###### A Javascript Maze Generation Visualizer
+[Visit the production version](http://www.aaron-olsen.com/maze)
 
 ## Install
 #### Prerequisites
