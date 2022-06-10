@@ -1,38 +1,89 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const path = require('path');
+const path = require('path')
 
-module.exports = {
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 3000
-  },
-  devtool: "#eval-source-map",
-  module: {
-    rules: [
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = () => {
+  return {
+    entry: './src/index.js',
+    module: {
+      rules: rules(),
+    },
+    resolve: {
+      extensions: ['.js', '.jsx']
+    },
+    output: {
+      filename: 'main.js',
+      path: path.resolve(__dirname, 'dist'),
+    },
+    mode: 'development',
+    devtool: 'eval-source-map',
+    devServer: {
+      port: 3000,
+      hot: true,
+      open: true,
+    },
+    plugins: plugins(),
+  }
+}
+
+let rules = () => {
+  return [js(), scssModule(), scssGlobal(), images()]
+}
+
+function js() {
+  return {
+    test: /\.(js|jsx)$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader',
+    },
+  }
+}
+
+function scssModule() {
+  return {
+    test: /\.scss$/,
+    use: [
+      'style-loader',
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        loader: 'css-loader',
+        options: {
+          modules: true,
+        },
       },
+      'sass-loader',
+    ],
+    include: /\.mod\.scss$/,
+  }
+}
+
+function scssGlobal() {
+  return {
+    test: /\.(css|scss)$/,
+    use: ['style-loader', 'css-loader', 'sass-loader'],
+    exclude: /\.mod\.scss$/,
+  }
+}
+
+function images() {
+  return {
+    test: /\.(png|jpe?g|gif)$/i,
+    use: [
       {
-        test: /\.html$/,
-        use: {
-          loader: "html-loader"
-        }
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: '/images',
+        },
       },
-      {
-        test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
-    ]
-  },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: "./src/index.html",
-      filename: "./index.html"
-    })
+    ],
+  }
+}
+
+let plugins = () => {
+  return [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src', 'index.html'),
+    }),
   ]
-};
+}
